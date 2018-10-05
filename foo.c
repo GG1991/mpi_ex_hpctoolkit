@@ -3,6 +3,8 @@
 
 #include "mpi.h"
 
+#define N 1000
+
 int func_a(int n)
 {
 	int i, sum = 0;
@@ -25,13 +27,15 @@ int main(int argc, char **argv)
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	if(argc == 1) {
-		printf("Error: One integer argument should be given as argument: <executable> NUM");
-		exit(1);
-	}
+	MPI_Barrier(MPI_COMM_WORLD);
 
-	int res_a = func_a(atoi(argv[1]));
-	int res_b = func_b(atoi(argv[1]));
+	int res_a = func_a(N);
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
+	int res_b = func_b(N);
+
+	MPI_Barrier(MPI_COMM_WORLD);
 
 	printf("I'm rank %d the result of func_a is %d\n", rank, res_a);
 	printf("I'm rank %d the result of func_b is %d\n", rank, res_b);
