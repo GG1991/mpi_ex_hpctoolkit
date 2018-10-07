@@ -3,7 +3,8 @@
 
 #include "mpi.h"
 
-#define N 1000
+#define N 50000000
+#define N_LOOP 20
 
 int func_a(int n)
 {
@@ -23,22 +24,25 @@ int func_b(int n)
 
 int main(int argc, char **argv)
 {
-	int rank;
+	int i, rank;
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	MPI_Barrier(MPI_COMM_WORLD);
+	for(i = 0; i < N_LOOP; ++i) {
 
-	int res_a = func_a(N);
+		MPI_Barrier(MPI_COMM_WORLD);
 
-	MPI_Barrier(MPI_COMM_WORLD);
+		int res_a = func_a(N);
 
-	int res_b = func_b(N);
+		MPI_Barrier(MPI_COMM_WORLD);
 
-	MPI_Barrier(MPI_COMM_WORLD);
+		int res_b = func_b(N);
 
-	printf("I'm rank %d the result of func_a is %d\n", rank, res_a);
-	printf("I'm rank %d the result of func_b is %d\n", rank, res_b);
+		MPI_Barrier(MPI_COMM_WORLD);
+	}
+
+//	printf("I'm rank %d the result of func_a is %d\n", rank, res_a);
+//	printf("I'm rank %d the result of func_b is %d\n", rank, res_b);
 
 	MPI_Finalize();
 
